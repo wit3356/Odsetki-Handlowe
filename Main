@@ -1,0 +1,131 @@
+Function OdsH(due_date As Date, pay_date As Date, paid_sum)
+    
+    Dim time_passed
+    Dim intrest
+    Dim intrest_temp
+    Dim i As Integer
+    Dim i1 As Integer
+    Dim i2 As Integer
+    time_passed = 0
+    intrest = 0
+    intrest_temp = 0
+        
+    Dim odst_d(5, 1) As Date
+    Dim odst_w(5)
+    Dim c_chd(9) As Date
+    Dim m_chd(30) As Date
+    
+    
+    
+    'Intrest rates and respected time ranges
+    odst_d(0, 0) = "01.01.2021"
+    odst_d(0, 1) = "31.12.2021"
+    odst_w(0) = 10.1
+
+    odst_d(1, 0) = "01.01.2022"
+    odst_d(1, 1) = "30.06.2022"
+    odst_w(1) = 11.75
+        
+    odst_d(2, 0) = "01.07.2022"
+    odst_d(2, 1) = "31.12.2022"
+    odst_w(2) = 16
+
+    odst_d(3, 0) = "01.01.2023"
+    odst_d(3, 1) = "31.12.2023"
+    odst_w(3) = 16.75
+
+    odst_d(4, 0) = "01.01.2024"
+    odst_d(4, 1) = "30.06.2025"
+    odst_w(4) = 15.75
+        
+    odst_d(5, 0) = "01.07.2025"
+    odst_d(5, 1) = "31.12.2025"
+    odst_w(5) = 15.25
+    
+    'Constant holidays
+        c_chd(0) = "01.01.2000"
+        c_chd(1) = "06.01.2000"
+        c_chd(2) = "01.05.2000"
+        c_chd(3) = "03.05.2000"
+        c_chd(4) = "15.08.2000"
+        c_chd(5) = "01.11.2000"
+        c_chd(6) = "11.11.2000"
+        c_chd(7) = "25.11.2000"
+        c_chd(8) = "26.11.2000"
+    
+    'Moving holidays
+        '2021
+        m_chd(0) = "05.04.2021"
+        m_chd(1) = "03.06.2021"
+        '2022
+        m_chd(2) = "18.04.2022"
+        m_chd(3) = "16.06.2022"
+        '2023
+        m_chd(4) = "10.04.2023"
+        m_chd(5) = "08.06.2023"
+        '2024
+        m_chd(6) = "01.04.2024"
+        m_chd(7) = "30.05.2024"
+        '2025
+        m_chd(8) = "21.04.2025"
+        m_chd(9) = "19.06.2025"
+        m_chd(10) = "24.12.2025"
+        
+        
+    
+
+    'Debug.Print (Weekday(due_date, vbMonday))
+    'If due date is on holiday move it forward
+    For i2 = 0 To 3
+        'Due date on weekend
+        While Weekday(due_date, vbMonday) >= 6
+            due_date = DateAdd("d", 1, due_date)
+            'Debug.Print (Weekday(due_date, vbMonday))
+        Wend
+        'Due date on moving holiday
+        For i1 = 0 To 8
+            If due_date = m_chd(i1) Then
+                due_date = DateAdd("d", 1, due_date)
+            End If
+        Next i1
+        'Due date on constant holiday
+        
+        
+        
+        
+        
+    Next i2
+    
+    
+    Debug.Print (due_date)
+
+    For i = 0 To 5
+        If due_date <= odst_d(i, 0) And pay_date >= odst_d(i, 0) Then
+            If pay_date <= odst_d(i, 1) Then
+                time_passed = DateDiff("d", odst_d(i, 0), pay_date) + 1
+            Else
+                time_passed = DateDiff("d", odst_d(i, 0), odst_d(i, 1)) + 1
+            End If
+                intrest_temp = (paid_sum * (time_passed) * (odst_w(i))) / 365
+
+                intrest = intrest + intrest_temp
+                'Debug.Print (time_passed)
+                'Debug.Print (intrest_temp)
+        End If
+            
+        If due_date >= odst_d(i, 0) And due_date <= odst_d(i, 1) Then
+            If pay_date <= odst_d(i, 1) Then
+                time_passed = DateDiff("d", due_date, pay_date)
+            Else
+                time_passed = DateDiff("d", due_date, odst_d(i, 1)) - 1
+            End If
+                intrest_temp = ((paid_sum * (time_passed) * (odst_w(i))) / 365)
+                intrest = intrest + intrest_temp
+                'Debug.Print (time_passed)
+                'Debug.Print (intrest_temp)
+        End If
+                
+    Next i
+    OdsH = intrest / 100
+End Function
+        
