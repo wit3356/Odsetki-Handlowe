@@ -47,15 +47,15 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
 'State holidays list
 
     'Constant holidays
-        c_chd(0) = "01.01.2000"
-        c_chd(1) = "06.01.2000"
-        c_chd(2) = "01.05.2000"
-        c_chd(3) = "03.05.2000"
-        c_chd(4) = "15.08.2000"
-        c_chd(5) = "01.11.2000"
-        c_chd(6) = "11.11.2000"
-        c_chd(7) = "25.11.2000"
-        c_chd(8) = "26.11.2000"
+        c_chd(0) = "01.01.2000" 'New Year
+        c_chd(1) = "06.01.2000" 'Epiphany - 3 Kings coming  (PL holiday)
+        c_chd(2) = "01.05.2000" 'Workers Day
+        c_chd(3) = "03.05.2000" '3rd May Constitution       (PL holiday)
+        c_chd(4) = "15.08.2000" 'Assumption of Mary         (PL holiday)
+        c_chd(5) = "01.11.2000" 'Saints day
+        c_chd(6) = "11.11.2000" 'Independence day           (PL holiday)
+        c_chd(7) = "25.12.2000" 'Christmass
+        c_chd(8) = "26.12.2000" 'Christmass
     
     'Moving holidays
         '2021
@@ -78,17 +78,17 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
 '-----------------------------------------------------------------------------------------------------------------
 'Moving due date if it falls on holiday
     
-    For i2 = 0 To 3
+    For i2 = 0 To 5
         'Due date on weekend
         While Weekday(due_date, vbMonday) >= 6
-            Debug.Print ("Adding one day")
+            Debug.Print ("Adding one day – Weekend")
             due_date = DateAdd("d", 1, due_date)
             'Debug.Print (Weekday(due_date, vbMonday))
         Wend
         'Due date on moving holiday
         For i1 = 0 To 10
             If due_date = m_chd(i1) Then
-                Debug.Print ("Adding one day")
+                Debug.Print ("Adding one day – Moving holiday")
                 due_date = DateAdd("d", 1, due_date)
             End If
         Next i1
@@ -96,13 +96,18 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
         For i3 = 0 To 8
             'Debug.Print (DateAdd("yyyy", (Year(due_date) - 2000), c_chd(i3)))
             If due_date = (DateAdd("yyyy", (Year(due_date) - 2000), c_chd(i3))) Then
-                Debug.Print ("Adding one day")
+                Debug.Print ("Adding one day – Constant holiday")
                 due_date = DateAdd("d", 1, due_date)
             End If
         Next i3
     Next i2
     Debug.Print (due_date)
     
+    If pay_date <= due_date Then
+        pay_date = due_date
+        Debug.Print ("Pay date exceedes due date")
+    End If
+
 '-----------------------------------------------------------------------------------------------------------------
 'Calculation due intrest
 
@@ -113,21 +118,21 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
             Else
                 time_passed = DateDiff("d", odst_d(i, 0), odst_d(i, 1)) + 1
             End If
-                intrest_temp = (paid_sum * (time_passed) * (odst_w(i))) / 365
+                intrest_temp = Round(((paid_sum * (time_passed) * (odst_w(i))) / 365), 0)
                 intrest = intrest + intrest_temp
-                'Debug.Print (time_passed)
-                'Debug.Print (intrest_temp)
+                Debug.Print (time_passed)
+                Debug.Print (intrest_temp)
         End If
         If due_date >= odst_d(i, 0) And due_date <= odst_d(i, 1) Then
             If pay_date <= odst_d(i, 1) Then
                 time_passed = DateDiff("d", due_date, pay_date)
             Else
-                time_passed = DateDiff("d", due_date, odst_d(i, 1)) - 1
+                time_passed = DateDiff("d", due_date, odst_d(i, 1))
             End If
-                intrest_temp = ((paid_sum * (time_passed) * (odst_w(i))) / 365)
+                intrest_temp = Round(((paid_sum * (time_passed) * (odst_w(i))) / 365), 0)
                 intrest = intrest + intrest_temp
-                'Debug.Print (time_passed)
-                'Debug.Print (intrest_temp)
+                Debug.Print (time_passed)
+                Debug.Print (intrest_temp)
         End If
     Next i
 
