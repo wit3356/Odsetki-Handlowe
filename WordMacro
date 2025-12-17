@@ -21,8 +21,6 @@ Sub Makro1()
     Selection.Tables(1).PreferredWidthType = wdPreferredWidthPercent
     Selection.Tables(1).PreferredWidth = 103
     
-
-
     Selection.Font.Size = 10
     
     Selection.ParagraphFormat.Alignment = wdAlignParagraphRight
