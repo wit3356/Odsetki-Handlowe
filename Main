@@ -14,7 +14,7 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
     time_sum = 0
     
     Dim result
-    result = "Za okres" & Chr(9) & "Kwota długu" & "Ilość dni" & Chr(9) & "Odestki % (Handlowe)" & Chr(9) & "Kwota odsetek"
+    result = "Za okres" & Chr(9) & "Kwota długu" & Chr(9) & "Ilość dni" & Chr(9) & "Odestki % (Handlowe)" & Chr(9) & "Kwota odsetek"
     
     
     Dim odst_d(5, 1) As Date
