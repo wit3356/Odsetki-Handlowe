@@ -126,8 +126,10 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
         If due_date >= odst_d(i, 0) And due_date <= odst_d(i, 1) Then
             If pay_date <= odst_d(i, 1) Then
                 time_passed = DateDiff("d", due_date, pay_date)
+                result = result & due_date & " – " & pay_date
             Else
                 time_passed = DateDiff("d", due_date, odst_d(i, 1))
+                result = result & due_date & " – " & odst_d(i, 1)
             End If
                 intrest_temp = Round(((paid_sum * (time_passed) * (odst_w(i))) / 365), 0)
                 intrest = intrest + intrest_temp
@@ -139,7 +141,8 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
 '-----------------------------------------------------------------------------------------------------------------
 'Return result
 
-    OdsH = intrest / 100
+    'OdsH = intrest / 100
+    OdsH = result
     
 End Function
         
