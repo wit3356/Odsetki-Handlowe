@@ -12,9 +12,10 @@ Sub Makro1()
         .ApplyStyleFirstColumn = True
         .ApplyStyleLastColumn = False
     End With
-    Selection.Tables(1).ApplyStyleLastRow = Not Selection.Tables(1). _
-        ApplyStyleLastRow
+
     Selection.Tables(1).Style = "Zwykła tabela 1"
+    Selection.Tables(1).ApplyStyleLastRow = Not Selection.Tables(1). _
+    ApplyStyleLastRow
     Selection.Tables(1).Rows.Alignment = wdAlignRowCenter
     Selection.Tables(1).AutoFitBehavior (wdAutoFitContent)
     Selection.Tables(1).PreferredWidthType = wdPreferredWidthPercent
