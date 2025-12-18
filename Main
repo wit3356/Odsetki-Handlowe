@@ -1,4 +1,5 @@
-Function OdsH(due_date As Date, pay_date As Date, paid_sum)
+
+Function OdsH(due_date As Date, pay_date As Date, paid_sum, type_of_output)
     
     Dim time_passed
     Dim intrest
@@ -14,7 +15,7 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
     time_sum = 0
     
     Dim result
-    result = "Za okres" & Chr(9) & "Kwota długu" & Chr(9) & "Ilość dni" & Chr(9) & "Odestki % (Handlowe)" & Chr(9) & "Kwota odsetek"
+    result = ""
     
     
     Dim odst_d(5, 1) As Date
@@ -121,11 +122,11 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
         If due_date <= odst_d(i, 0) And pay_date >= odst_d(i, 0) Then
             If pay_date <= odst_d(i, 1) Then
                 time_passed = DateDiff("d", odst_d(i, 0), pay_date) + 1
-                result = result & Chr(10)
+                'result = result & Chr(10)
                 result = result & odst_d(i, 0) & " - " & pay_date & Chr(9)
             Else
                 time_passed = DateDiff("d", odst_d(i, 0), odst_d(i, 1)) + 1
-                result = result & Chr(10)
+                'result = result & Chr(10)
                 result = result & odst_d(i, 0) & " - " & odst_d(i, 1) & Chr(9)
             End If
                 intrest_temp = Round(((paid_sum * (time_passed) * (odst_w(i))) / 36500), 2)
@@ -134,15 +135,16 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
                 Debug.Print (time_passed)
                 Debug.Print (intrest_temp)
                 result = result & paid_sum & " PLN" & Chr(9) & time_passed & Chr(9) & odst_w(i) & "%" & Chr(9) & intrest_temp & " PLN"
+                result = result & Chr(10)
         End If
         If due_date >= odst_d(i, 0) And due_date <= odst_d(i, 1) Then
             If pay_date <= odst_d(i, 1) Then
                 time_passed = DateDiff("d", due_date, pay_date)
-                result = result & Chr(10)
+                'result = result & Chr(10)
                 result = result & due_date & " - " & pay_date & Chr(9)
             Else
                 time_passed = DateDiff("d", due_date, odst_d(i, 1))
-                result = result & Chr(10)
+                'result = result & Chr(10)
                 result = result & due_date & " - " & odst_d(i, 1) & Chr(9)
             End If
                 intrest_temp = Round(((paid_sum * (time_passed) * (odst_w(i))) / 36500), 2)
@@ -151,16 +153,26 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum)
                 Debug.Print (time_passed)
                 Debug.Print (intrest_temp)
                 result = result & paid_sum & " PLN" & Chr(9) & time_passed & Chr(9) & odst_w(i) & "%" & Chr(9) & intrest_temp & " PLN"
+                result = result & Chr(10)
                 
         End If
     Next i
 
 '-----------------------------------------------------------------------------------------------------------------
 'Return result
-    result = result & Chr(10)
+    'result = result & Chr(10)
     result = result & " " & Chr(9) & "Łączne opóźnienie" & Chr(9) & time_sum & Chr(9) & "Razem" & Chr(9) & intrest & " PLN"
-    'OdsH = intrest
+    result = result & Chr(10)
+    
+    If type_of_output = 1 Then
+    OdsH = intrest
+    Else
     OdsH = result
+    End If
     
 End Function
         
+Function Table_head()
+    Table_head = "Za okres" & Chr(9) & "Kwota długu" & Chr(9) & "Ilość dni" & Chr(9) & "Odsetki % (Handlowe)" & Chr(9) & "Kwota odsetek" & Chr(10)
+End Function
+
