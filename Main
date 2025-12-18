@@ -1,6 +1,11 @@
-
 Function OdsH(due_date As Date, pay_date As Date, paid_sum, type_of_output)
     
+    If paid_sum = 0 Then
+    
+        OdsH = ""
+    Else
+    
+        
     Dim time_passed
     Dim intrest
     Dim intrest_temp
@@ -88,14 +93,14 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum, type_of_output)
     For i2 = 0 To 5
         'Due date on weekend
         While Weekday(due_date, vbMonday) >= 6
-            Debug.Print ("Adding one day – Weekend")
+            'Debug.Print ("Adding one day – Weekend")
             due_date = DateAdd("d", 1, due_date)
             'Debug.Print (Weekday(due_date, vbMonday))
         Wend
         'Due date on moving holiday
         For i1 = 0 To 10
             If due_date = m_chd(i1) Then
-                Debug.Print ("Adding one day – Moving holiday")
+                'Debug.Print ("Adding one day – Moving holiday")
                 due_date = DateAdd("d", 1, due_date)
             End If
         Next i1
@@ -103,16 +108,16 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum, type_of_output)
         For i3 = 0 To 8
             'Debug.Print (DateAdd("yyyy", (Year(due_date) - 2000), c_chd(i3)))
             If due_date = (DateAdd("yyyy", (Year(due_date) - 2000), c_chd(i3))) Then
-                Debug.Print ("Adding one day – Constant holiday")
+                'Debug.Print ("Adding one day – Constant holiday")
                 due_date = DateAdd("d", 1, due_date)
             End If
         Next i3
     Next i2
-    Debug.Print (due_date)
+    'Debug.Print (due_date)
     
     If pay_date <= due_date Then
         pay_date = due_date
-        Debug.Print ("Pay date exceedes due date")
+        'Debug.Print ("Pay date exceedes due date")
     End If
 
 '-----------------------------------------------------------------------------------------------------------------
@@ -132,8 +137,8 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum, type_of_output)
                 intrest_temp = Round(((paid_sum * (time_passed) * (odst_w(i))) / 36500), 2)
                 intrest = intrest + intrest_temp
                 time_sum = time_sum + time_passed
-                Debug.Print (time_passed)
-                Debug.Print (intrest_temp)
+                'Debug.Print (time_passed)
+                'Debug.Print (intrest_temp)
                 result = result & paid_sum & " PLN" & Chr(9) & time_passed & Chr(9) & odst_w(i) & "%" & Chr(9) & intrest_temp & " PLN"
                 result = result & Chr(10)
         End If
@@ -150,8 +155,8 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum, type_of_output)
                 intrest_temp = Round(((paid_sum * (time_passed) * (odst_w(i))) / 36500), 2)
                 intrest = intrest + intrest_temp
                 time_sum = time_sum + time_passed
-                Debug.Print (time_passed)
-                Debug.Print (intrest_temp)
+                'Debug.Print (time_passed)
+                'Debug.Print (intrest_temp)
                 result = result & paid_sum & " PLN" & Chr(9) & time_passed & Chr(9) & odst_w(i) & "%" & Chr(9) & intrest_temp & " PLN"
                 result = result & Chr(10)
                 
@@ -169,10 +174,20 @@ Function OdsH(due_date As Date, pay_date As Date, paid_sum, type_of_output)
     Else
     OdsH = result
     End If
-    
+    End If
+        
 End Function
         
 Function Table_head()
-    Table_head = "Za okres" & Chr(9) & "Kwota długu" & Chr(9) & "Ilość dni" & Chr(9) & "Odsetki % (Handlowe)" & Chr(9) & "Kwota odsetek" & Chr(10)
+    
+    Table_head = "Za okres" & Chr(9) & "Kwota opłacona" & Chr(9) & "Ilość dni" & Chr(9) & "Odsetki % (Handlowe)" & Chr(9) & "Kwota odsetek" & Chr(10)
+   
 End Function
 
+Function Table_end(to_pay)
+    Table_end = " " & Chr(9) & " " & Chr(9) & " " & Chr(9) & "SUMA ODSETEK" & Chr(9) & to_pay & " PLN"
+End Function
+
+Function summary_tabble(doc_nr, due_date, pay_date, payed_sum, left_sum)
+    summary_tabble = doc_nr & Chr(9) & due_date & Chr(9) & pay_date & Chr(9) & payed_sum & " PLN" & Chr(9) & left_sum & " PLN" & Chr(10)
+End Function
