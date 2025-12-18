@@ -24,6 +24,7 @@ Sub Makro1()
 
 
     Selection.Font.Size = 10
+    Selection.Font.Name = "NimbusSans-Bold"
     
     Selection.ParagraphFormat.Alignment = wdAlignParagraphRight
     Selection.Find.ClearFormatting
@@ -40,8 +41,6 @@ Sub Makro1()
         .MatchSoundsLike = False
         .MatchAllWordForms = False
     End With
-    Selection.Font.Name = "NimbusSans-Bold"
-    Selection.Font.Size = 10
     Selection.Find.Execute Replace:=wdReplaceAll
 End Sub
 
